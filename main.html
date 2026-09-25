@@ -2,28 +2,44 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini-games</title>
-    
 </head>
 <body id="grad1">
 
-<nav id="nav">    
+<nav id="nav">
+    <div class="logo">MiniHub</div>
+
+    <div class="game_btn" id="Color">
+        <h2 class="hely">Color</h2>
     </div>
+    <div class="game_btn" id="Memory">
+        <h2 class="hely">Memory</h2>
+    </div>
+    <div class="game_btn" id="Reaction">
+        <h2 class="hely">Reaction</h2>
+    </div>
+
+    <div id="mode_toggle">
+        <h2 class="hely">DARK</h2>
+    </div>
+
     <div id="login">
-        <h2 id="hely">Login</h2>
+        <h2 class="hely">Login</h2>
     </div>
-
-    <div id="Color">
-        <h2 id="hely">Color</h2>
-    </div>
-
 </nav>
 
 <div class="central_div">
-        
+    <h1 id="cim">Válassz egy játékot</h1>
+    <div class="game_card" id="game_display">
+        <h3>Color Game</h3>
+        <p>asd</p>
+    </div>
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
