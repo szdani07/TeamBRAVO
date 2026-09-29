@@ -11,7 +11,7 @@ toggleBtn.addEventListener("click", () => {
 const gameData = {
     Color: { title: "Color Game", desc: "asd" },
     Memory: { title: "Memory Game", desc: "asd" },
-    Shape: { title: "Shape Game", desc: "asd" }
+    Reaction: { title: "Reaction Game", desc: "asd" }
 };
 
 const gameButtons = document.querySelectorAll(".game_btn");
@@ -23,3 +23,14 @@ gameButtons.forEach(btn => {
         gameDisplay.innerHTML = `<h3>${game.title}</h3><p>${game.desc}</p>`;
     });
 });
+
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
