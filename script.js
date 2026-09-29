@@ -11,7 +11,7 @@ toggleBtn.addEventListener("click", () => {
 const gameData = {
     Color: { title: "Color Game", desc: "asd" },
     Memory: { title: "Memory Game", desc: "asd" },
-    Reaction: { title: "Reaction Game", desc: "asd" }
+    Reaction: { title: "Shape Game", desc: "asd" }
 };
 
 const gameButtons = document.querySelectorAll(".game_btn");
