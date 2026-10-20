@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dialed.gg - 3-Spectrum Color Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0b0e;
+            color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Custom range slider thumb styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            border-radius: 9999px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #181824;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5), 0 0 4px rgba(168, 85, 247, 0.8);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #181824;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        /* Glowing animation for interactive elements */
+        .purple-glow {
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.25);
+        }
+
+        .purple-glow-btn:hover {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        /* Pulse timer line */
+        @keyframes shrink {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+        .animate-timer {
+            animation: shrink 2.5s linear forwards;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6">
+
+    <div class="w-full max-w-lg bg-[#14141e] border border-[#262638] rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        <!-- Header / Logo -->
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#262638]">
+            <div class="flex items-center space-x-2">
+                <span class="bg-gradient-to-r from-purple-500 to-indigo-500 text-transparent bg-clip-text font-black text-2xl tracking-wider">DIALED<span class="text-white">.GG</span></span>
+                <span class="text-xs bg-purple-950/80 text-purple-400 border border-purple-800/50 px-2 py-0.5 rounded-full font-semibold uppercase tracking-widest">Memory</span>
+            </div>
+            
+            <!-- Mode Toggle (RGB vs HSL) -->
+            <div class="flex bg-[#0b0b0e] p-1 rounded-xl border border-[#262638]">
+                <button id="modeRgbBtn" onclick="switchMode('RGB')" class="px-3 py-1 text-xs font-bold rounded-lg transition-all bg-purple-600 text-white shadow-md">RGB</button>
+                <button id="modeHslBtn" onclick="switchMode('HSL')" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition-all">HSL</button>
+            </div>
+        </div>
+
+        <!-- Main Card Body -->
+        <div class="space-y-6">
+
+            <!-- Target / Preview Box -->
+            <div class="relative">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="boxLabel" class="text-xs font-bold uppercase tracking-wider text-gray-400">Target Color</span>
+                    <span id="timerText" class="text-xs font-mono font-bold text-purple-400"></span>
+                </div>
+                
+                <div id="colorCanvas" class="w-full h-44 sm:h-52 rounded-xl border-2 border-[#262638] flex flex-col items-center justify-center relative overflow-hidden transition-all duration-300 purple-glow bg-[#181824]">
+                    
+                    <!-- Countdown / Phase overlay text -->
+                    <div id="canvasOverlay" class="text-center z-10 p-4 backdrop-blur-xs bg-black/30 rounded-xl border border-white/10">
+                        <p id="overlayMainText" class="text-xl font-extrabold text-white tracking-wide uppercase">Készülj fel!</p>
+                        <p id="overlaySubText" class="text-xs text-gray-300 mt-1">Nyomd meg a Start gombot a kezdéshez</p>
+                    </div>
+
+                    <!-- Side-by-side Result Comparison View (Hidden initially) -->
+                    <div id="resultComparison" class="absolute inset-0 hidden flex">
+                        <div class="w-1/2 h-full flex flex-col justify-end p-3 border-r border-black/30 text-xs font-bold" id="targetSide">
+                            <span class="bg-black/60 px-2 py-1 rounded w-max text-gray-300">Target</span>
+                            <span id="targetValueText" class="text-white font-mono mt-1 text-[11px]"></span>
+                        </div>
+                        <div class="w-1/2 h-full flex flex-col justify-end p-3 text-xs font-bold" id="guessSide">
+                            <span class="bg-black/60 px-2 py-1 rounded w-max text-gray-300">Tippelt</span>
+                            <span id="guessValueText" class="text-white font-mono mt-1 text-[11px]"></span>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar for memory duration -->
+                    <div id="timerBarContainer" class="absolute bottom-0 left-0 w-full h-1.5 bg-black/40 hidden">
+                        <div id="timerBar" class="h-full bg-gradient-to-r from-purple-500 to-indigo-400"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Spectrum Sliders Section -->
+            <div id="slidersSection" class="space-y-4 opacity-50 pointer-events-none transition-opacity duration-300">
+                
+                <!-- Slider 1 -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-bold">
+                        <span id="label1" class="text-red-400 uppercase tracking-wider">Red (R)</span>
+                        <span id="val1" class="font-mono text-gray-200">128</span>
+                    </div>
+                    <input type="range" id="slider1" min="0" max="255" value="128" class="w-full" oninput="onSliderChange()">
+                </div>
+
+                <!-- Slider 2 -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-bold">
+                        <span id="label2" class="text-green-400 uppercase tracking-wider">Green (G)</span>
+                        <span id="val2" class="font-mono text-gray-200">128</span>
+                    </div>
+                    <input type="range" id="slider2" min="0" max="255" value="128" class="w-full" oninput="onSliderChange()">
+                </div>
+
+                <!-- Slider 3 -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-bold">
+                        <span id="label3" class="text-blue-400 uppercase tracking-wider">Blue (B)</span>
+                        <span id="val3" class="font-mono text-gray-200">128</span>
+                    </div>
+                    <input type="range" id="slider3" min="0" max="255" value="128" class="w-full" oninput="onSliderChange()">
+                </div>
+            </div>
+
+            <!-- Score / Accuracy Display Box (Hidden during play) -->
+            <div id="scoreBox" class="hidden bg-[#0b0b0e] border border-[#262638] rounded-xl p-4 text-center space-y-1">
+                <p class="text-xs uppercase tracking-widest text-gray-400 font-semibold">Pontosság</p>
+                <div id="accuracyPercent" class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-300">0%</div>
+                <p id="accuracySubtext" class="text-xs text-gray-400 pt-1"></p>
+            </div>
+
+            <!-- Action Button -->
+            <button id="actionBtn" onclick="handleAction()" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-base tracking-wider uppercase transition-all duration-200 transform active:scale-[0.98] shadow-lg purple-glow-btn flex items-center justify-center space-x-2">
+                <span>Start Játék</span>
+            </button>
+
+            <!-- Stats Bar Footer -->
+            <div class="flex items-center justify-between pt-4 border-t border-[#262638] text-xs font-bold text-gray-400">
+                <div>Lejátszott körök: <span id="statRounds" class="text-white font-mono">0</span></div>
+                <div>Átlag pontosság: <span id="statAvg" class="text-purple-400 font-mono">0%</span></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let colorMode = 'RGB'; // 'RGB' or 'HSL'
+        let gameState = 'IDLE'; // IDLE, MEMORIZE, GUESS, RESULT
+        
+        // Color values stored as normalized objects
+        let targetColor = { r: 0, g: 0, b: 0, h: 0, s: 0, l: 0 };
+        let guessColor = { r: 128, g: 128, b: 128, h: 180, s: 50, l: 50 };
+
+        // Game Statistics
+        let totalRounds = 0;
+        let totalAccuracySum = 0;
+
+        // DOM Element Cache
+        const colorCanvas = document.getElementById('colorCanvas');
+        const canvasOverlay = document.getElementById('canvasOverlay');
+        const overlayMainText = document.getElementById('overlayMainText');
+        const overlaySubText = document.getElementById('overlaySubText');
+        const resultComparison = document.getElementById('resultComparison');
+        const targetSide = document.getElementById('targetSide');
+        const guessSide = document.getElementById('guessSide');
+        const targetValueText = document.getElementById('targetValueText');
+        const guessValueText = document.getElementById('guessValueText');
+        const boxLabel = document.getElementById('boxLabel');
+        const timerBarContainer = document.getElementById('timerBarContainer');
+        const timerBar = document.getElementById('timerBar');
+
+        const slidersSection = document.getElementById('slidersSection');
+        const slider1 = document.getElementById('slider1');
+        const slider2 = document.getElementById('slider2');
+        const slider3 = document.getElementById('slider3');
+        const val1 = document.getElementById('val1');
+        const val2 = document.getElementById('val2');
+        const val3 = document.getElementById('val3');
+        const label1 = document.getElementById('label1');
+        const label2 = document.getElementById('label2');
+        const label3 = document.getElementById('label3');
+
+        const actionBtn = document.getElementById('actionBtn');
+        const scoreBox = document.getElementById('scoreBox');
+        const accuracyPercent = document.getElementById('accuracyPercent');
+        const accuracySubtext = document.getElementById('accuracySubtext');
+
+        // Color Conversion Utilities
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; 
+            } else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function hslToRgb(h, s, l) {
+            h /= 360; s /= 100; l /= 100;
+            let r, g, b;
+
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                let p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+
+        // Switch between RGB and HSL spectrum modes
+        function switchMode(mode) {
+            if (gameState === 'MEMORIZE') return; // Lock mode switch during flash
+            colorMode = mode;
+
+            const rgbBtn = document.getElementById('modeRgbBtn');
+            const hslBtn = document.getElementById('modeHslBtn');
+
+            if (mode === 'RGB') {
+                rgbBtn.className = "px-3 py-1 text-xs font-bold rounded-lg transition-all bg-purple-600 text-white shadow-md";
+                hslBtn.className = "px-3 py-1 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition-all";
+                
+                label1.innerText = "Red (R)"; label1.className = "text-red-400 uppercase tracking-wider";
+                label2.innerText = "Green (G)"; label2.className = "text-green-400 uppercase tracking-wider";
+                label3.innerText = "Blue (B)"; label3.className = "text-blue-400 uppercase tracking-wider";
+
+                slider1.min = 0; slider1.max = 255; slider1.value = guessColor.r;
+                slider2.min = 0; slider2.max = 255; slider2.value = guessColor.g;
+                slider3.min = 0; slider3.max = 255; slider3.value = guessColor.b;
+            } else {
+                hslBtn.className = "px-3 py-1 text-xs font-bold rounded-lg transition-all bg-purple-600 text-white shadow-md";
+                rgbBtn.className = "px-3 py-1 text-xs font-bold rounded-lg text-gray-400 hover:text-white transition-all";
+
+                label1.innerText = "Hue (H)"; label1.className = "text-purple-400 uppercase tracking-wider";
+                label2.innerText = "Saturation (S)"; label2.className = "text-pink-400 uppercase tracking-wider";
+                label3.innerText = "Lightness (L)"; label3.className = "text-amber-400 uppercase tracking-wider";
+
+                slider1.min = 0; slider1.max = 360; slider1.value = guessColor.h;
+                slider2.min = 0; slider2.max = 100; slider2.value = guessColor.s;
+                slider3.min = 0; slider3.max = 100; slider3.value = guessColor.l;
+            }
+
+            updateSliderGradients();
+            onSliderChange();
+        }
+
+        // Dynamically update background gradients of the range sliders
+        function updateSliderGradients() {
+            if (colorMode === 'RGB') {
+                slider1.style.background = `linear-gradient(to right, rgb(0, ${guessColor.g}, ${guessColor.b}), rgb(255, ${guessColor.g}, ${guessColor.b}))`;
+                slider2.style.background = `linear-gradient(to right, rgb(${guessColor.r}, 0, ${guessColor.b}), rgb(${guessColor.r}, 255, ${guessColor.b}))`;
+                slider3.style.background = `linear-gradient(to right, rgb(${guessColor.r}, ${guessColor.g}, 0), rgb(${guessColor.r}, ${guessColor.g}, 255))`;
+            } else {
+                slider1.style.background = `linear-gradient(to right, 
+                    hsl(0, ${guessColor.s}%, ${guessColor.l}%), hsl(60, ${guessColor.s}%, ${guessColor.l}%), 
+                    hsl(120, ${guessColor.s}%, ${guessColor.l}%), hsl(180, ${guessColor.s}%, ${guessColor.l}%), 
+                    hsl(240, ${guessColor.s}%, ${guessColor.l}%), hsl(300, ${guessColor.s}%, ${guessColor.l}%), 
+                    hsl(360, ${guessColor.s}%, ${guessColor.l}%))`;
+                slider2.style.background = `linear-gradient(to right, hsl(${guessColor.h}, 0%, ${guessColor.l}%), hsl(${guessColor.h}, 100%, ${guessColor.l}%))`;
+                slider3.style.background = `linear-gradient(to right, hsl(${guessColor.h}, ${guessColor.s}%, 0%), hsl(${guessColor.h}, ${guessColor.s}%, 50%), hsl(${guessColor.h}, ${guessColor.s}%, 100%))`;
+            }
+        }
+
+        // Handle Slider movements
+        function onSliderChange() {
+            const v1 = parseInt(slider1.value);
+            const v2 = parseInt(slider2.value);
+            const v3 = parseInt(slider3.value);
+
+            if (colorMode === 'RGB') {
+                guessColor.r = v1;
+                guessColor.g = v2;
+                guessColor.b = v3;
+                const hsl = rgbToHsl(v1, v2, v3);
+                guessColor.h = hsl.h; guessColor.s = hsl.s; guessColor.l = hsl.l;
+
+                val1.innerText = v1;
+                val2.innerText = v2;
+                val3.innerText = v3;
+            } else {
+                guessColor.h = v1;
+                guessColor.s = v2;
+                guessColor.l = v3;
+                const rgb = hslToRgb(v1, v2, v3);
+                guessColor.r = rgb.r; guessColor.g = rgb.g; guessColor.b = rgb.b;
+
+                val1.innerText = `${v1}°`;
+                val2.innerText = `${v2}%`;
+                val3.innerText = `${v3}%`;
+            }
+
+            updateSliderGradients();
+
+            // If in guessing phase, update live canvas
+            if (gameState === 'GUESS') {
+                colorCanvas.style.backgroundColor = `rgb(${guessColor.r}, ${guessColor.g}, ${guessColor.b})`;
+            }
+        }
+
+        // Main game controller button logic
+        function handleAction() {
+            if (gameState === 'IDLE' || gameState === 'RESULT') {
+                startNewRound();
+            } else if (gameState === 'GUESS') {
+                submitGuess();
+            }
+        }
+
+        // Start a new game round
+        function startNewRound() {
+            gameState = 'MEMORIZE';
+            scoreBox.classList.add('hidden');
+            resultComparison.classList.add('hidden');
+            canvasOverlay.classList.remove('hidden');
+
+            // Generate Random Target Color
+            targetColor.r = Math.floor(Math.random() * 256);
+            targetColor.g = Math.floor(Math.random() * 256);
+            targetColor.b = Math.floor(Math.random() * 256);
+            const targetHsl = rgbToHsl(targetColor.r, targetColor.g, targetColor.b);
+            targetColor.h = targetHsl.h; targetColor.s = targetHsl.s; targetColor.l = targetHsl.l;
+
+            // Reset guess sliders to middle default
+            guessColor = { r: 128, g: 128, b: 128, h: 180, s: 50, l: 50 };
+            if (colorMode === 'RGB') {
+                slider1.value = 128; slider2.value = 128; slider3.value = 128;
+            } else {
+                slider1.value = 180; slider2.value = 50; slider3.value = 50;
+            }
+            onSliderChange();
+
+            // Display Target Color
+            boxLabel.innerText = "Megjegyzendő Szín";
+            colorCanvas.style.backgroundColor = `rgb(${targetColor.r}, ${targetColor.g}, ${targetColor.b})`;
+            overlayMainText.innerText = "Jegyezd meg!";
+            overlaySubText.innerText = "A szín hamarosan eltűnik...";
+
+            // UI Locks
+            slidersSection.classList.add('opacity-50', 'pointer-events-none');
+            actionBtn.disabled = true;
+            actionBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Timer Bar Animation
+            timerBarContainer.classList.remove('hidden');
+            timerBar.classList.remove('animate-timer');
+            void timerBar.offsetWidth; // trigger reflow
+            timerBar.classList.add('animate-timer');
+
+            // Memory phase timer (2.5 seconds)
+            setTimeout(() => {
+                transitionToGuessPhase();
+            }, 2500);
+        }
+
+        // Transition from Memory Phase to Guessing Phase
+        function transitionToGuessPhase() {
+            gameState = 'GUESS';
+            timerBarContainer.classList.add('hidden');
+            canvasOverlay.classList.add('hidden');
+
+            boxLabel.innerText = "Élő Csúszka Előnézet";
+            colorCanvas.style.backgroundColor = `rgb(${guessColor.r}, ${guessColor.g}, ${guessColor.b})`;
+
+            // Enable Sliders & Submit button
+            slidersSection.classList.remove('opacity-50', 'pointer-events-none');
+            actionBtn.disabled = false;
+            actionBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            actionBtn.querySelector('span').innerText = "Tipp Beküldése";
+        }
+
+        // Calculate result and accuracy percentage
+        function submitGuess() {
+            gameState = 'RESULT';
+
+            // Calculate Euclidean distance in 3D RGB color space
+            // Maximum possible distance in 255x255x255 space is sqrt(255^2 + 255^2 + 255^2) ≈ 441.67
+            const distance = Math.sqrt(
+                Math.pow(targetColor.r - guessColor.r, 2) +
+                Math.pow(targetColor.g - guessColor.g, 2) +
+                Math.pow(targetColor.b - guessColor.b, 2)
+            );
+
+            const maxDistance = 441.67;
+            const accuracy = Math.max(0, Math.min(100, Math.round((1 - (distance / maxDistance)) * 100)));
+
+            // Update stats
+            totalRounds++;
+            totalAccuracySum += accuracy;
+            document.getElementById('statRounds').innerText = totalRounds;
+            document.getElementById('statAvg').innerText = `${Math.round(totalAccuracySum / totalRounds)}%`;
+
+            // Display Results
+            boxLabel.innerText = "Összehasonlítás (Cél vs Tippelt)";
+            resultComparison.classList.remove('hidden');
+
+            targetSide.style.backgroundColor = `rgb(${targetColor.r}, ${targetColor.g}, ${targetColor.b})`;
+            guessSide.style.backgroundColor = `rgb(${guessColor.r}, ${guessColor.g}, ${guessColor.b})`;
+
+            targetValueText.innerText = `RGB(${targetColor.r},${targetColor.g},${targetColor.b})`;
+            guessValueText.innerText = `RGB(${guessColor.r},${guessColor.g},${guessColor.b})`;
+
+            // Lock Sliders
+            slidersSection.classList.add('opacity-50', 'pointer-events-none');
+
+            // Show Score Card
+            scoreBox.classList.remove('hidden');
+            accuracyPercent.innerText = `${accuracy}%`;
+
+            if (accuracy >= 95) {
+                accuracySubtext.innerText = "🔥 Zseniális! Tökéletes színmemória!";
+            } else if (accuracy >= 85) {
+                accuracySubtext.innerText = "⚡ Nagyszerű tipp! Nagyon közel voltál.";
+            } else if (accuracy >= 70) {
+                accuracySubtext.innerText = "👍 Jó próbálkozás, egész jó árnyalat.";
+            } else {
+                accuracySubtext.innerText = "🎯 Ne add fel! Gyakorlással jobb lesz.";
+            }
+
+            actionBtn.querySelector('span').innerText = "Új Kör Indítása";
+        }
+
+        // Initialize default slider visual states
+        updateSliderGradients();
+    </script>
+</body>
+</html>
+```
