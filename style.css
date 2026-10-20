@@ -270,9 +270,7 @@ button {
 
 
 
-
-
-input[type=text], input[type=password] {
+input {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -280,7 +278,6 @@ input[type=text], input[type=password] {
   border: 1px solid #ccc;
   box-sizing: border-box;
 }
-
 
 .cancelbtn1 {
   width: auto;

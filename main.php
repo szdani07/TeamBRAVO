@@ -71,22 +71,18 @@ $loginError = isset($_GET["login_error"]);
 
 <!-- LOGIN MODAL -->
 <div id="id01" class="modal">
-
   <form class="modal-content animate" action="login.php" method="post">
     <div class="imgcontainer">
       <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
     </div>
 
     <div class="container">
-      <?php if ($loginError): ?>
-        <p style="color:red">Invalid email or password.</p>
-      <?php endif; ?>
 
-      <label for="login-email"><b>Email</b></label>
-      <input type="email" id="login-email" placeholder="Enter Email" name="email" required>
+      <label for="email"><b>Email</b></label>
+      <input type="text" id="email" placeholder="Enter Email" name="email" required>
 
-      <label for="login-psw"><b>Password</b></label>
-      <input type="password" id="login-psw" placeholder="Enter Password" name="psw" required>
+      <label for="psw"><b>Password</b></label>
+      <input type="password" id="psw" placeholder="Enter Password" name="psw" required>
 
       <button type="submit">Login</button>
       <label>
@@ -117,14 +113,14 @@ $loginError = isset($_GET["login_error"]);
         <p style="color:red"><?= htmlspecialchars($regMessages[$regError] ?? $regMessages["server"]) ?></p>
       <?php endif; ?>
 
-      <label for="reg-email"><b>Email</b></label>
-      <input type="email" id="reg-email" placeholder="Enter Email" name="email" required>
+      <label for="email"><b>Email</b></label>
+      <input type="text" id="email" placeholder="Enter Email" name="email" required>
 
-      <label for="reg-psw"><b>Password</b></label>
-      <input type="password" id="reg-psw" placeholder="Enter Password" name="psw" minlength="6" required>
+      <label for="psw"><b>Password</b></label>
+      <input type="password" id="psw" placeholder="Enter Password" name="psw">
 
-      <label for="reg-psw-repeat"><b>Repeat Password</b></label>
-      <input type="password" id="reg-psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
+      <label for="psw"><b>Repeat Password</b></label>
+      <input type="password" id="psw" placeholder="Repeat Password" name="psw-repeat" required>
 
       <label>
         <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
