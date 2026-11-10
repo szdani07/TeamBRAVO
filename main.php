@@ -85,14 +85,11 @@ $loginError = isset($_GET["login_error"]);
       <input type="password" id="psw" placeholder="Enter Password" name="psw" required>
 
       <button type="submit">Login</button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
+    
     </div>
 
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#">password?</a></span>
+    <div class="container">
+      <a href=""><span class="psw">Forgot password?</span></a>
     </div>
   </form>
 </div>
@@ -106,7 +103,6 @@ $loginError = isset($_GET["login_error"]);
   <form class="modal-content1 animate" action="register.php" method="post">
     <div class="container1">
       <h1>Register</h1>
-      <p>Please fill in this form to create an account.</p>
       <hr>
 
       <?php if ($regError): ?>
@@ -122,14 +118,8 @@ $loginError = isset($_GET["login_error"]);
       <label for="psw"><b>Repeat Password</b></label>
       <input type="password" id="psw" placeholder="Repeat Password" name="psw-repeat" required>
 
-      <label>
-        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-      </label>
-
-      <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms &amp; Privacy</a>.</p>
-
       <div class="clearfix1">
-        <button type="button" onclick="document.getElementById('id1').style.display='none'" class="cancelbtn1">Cancel</button>
+        
         <button type="submit" class="signupbtn1">Sign Up</button>
       </div>
     </div>
