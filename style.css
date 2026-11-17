@@ -209,10 +209,6 @@ span.psw {
 
 }
 
-button {
-    background-color: #acf6ac;
-}
-
 .modal-content {
   background-color: #fefefe;
   margin: 5% auto 15% auto; 
@@ -250,7 +246,7 @@ button {
   cursor: pointer;
 }
 
-/* Change styles for span and cancel button on extra small screens */
+
 @media screen and (max-width: 300px) {
   span.psw {
      display: block;
@@ -309,9 +305,7 @@ margin-right: 30px;
 
 }
 
-button {
-    background-color: #acf6ac;
-}
+
 
 .modal-content1 {
   background-color: #fefefe;
@@ -351,5 +345,16 @@ button {
   cursor: pointer;
 }
 
-/* Change styles for span and cancel button on extra small screens */
+
+.jatekBtn{
+  width: 100px;
+  height: 60px;
+  background-image: linear-gradient(9deg, rgb(80, 0, 255), rgb(255, 242, 2));
+  color: azure;
+  font-size: 20px;
+  border-radius: 15px;
+  border: 2px solid black ;
+}
+
+
 

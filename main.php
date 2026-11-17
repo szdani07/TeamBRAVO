@@ -63,7 +63,7 @@ $loginError = isset($_GET["login_error"]);
     <h1 id="cim">Válassz egy játékot</h1>
     <div class="game_card" id="game_display">
         <h3>Color Game</h3>
-        <p>asd</p>
+    <button class="jatekBtn">Játék</button>
     </div>
 </div>
 
@@ -115,8 +115,8 @@ $loginError = isset($_GET["login_error"]);
       <label for="psw"><b>Password</b></label>
       <input type="password" id="psw" placeholder="Enter Password" name="psw">
 
-      <label for="psw"><b>Repeat Password</b></label>
-      <input type="password" id="psw" placeholder="Repeat Password" name="psw-repeat" required>
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input type="password" id="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
 
       <div class="clearfix1">
         
