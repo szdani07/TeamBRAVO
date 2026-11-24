@@ -9,9 +9,9 @@ toggleBtn.addEventListener("click", () => {
 
 //JÁTÉK VÁLASZTÓ
 const gameData = {
-    Color: { title: "Color Game", desc: "asd" },
-    Memory: { title: "Memory Game", desc: "asd" },
-    Reaction: { title: "Reaction Game", desc: "asd" }
+    Color: { title: "Color Game"},
+    Memory: { title: "Memory Game"},
+    Reaction: { title: "Reaction Game"}
 };
 
 const gameButtons = document.querySelectorAll(".game_btn");
@@ -20,7 +20,7 @@ const gameDisplay = document.getElementById("game_display");
 gameButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         const game = gameData[btn.id];
-        gameDisplay.innerHTML = `<h3>${game.title}</h3><p>${game.desc}</p>`;
+        gameDisplay.innerHTML = `<h3>${game.title}</h3> <button class="jatekBtn">Játék</button>`;
     });
 });
 
