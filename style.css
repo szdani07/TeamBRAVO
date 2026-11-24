@@ -128,8 +128,8 @@
 }
 
 .central_div{
-    height: 600px;
-    width: 450px;
+    height: 700px;
+    width: 550px;
     background: rgba(15,15,20,0.85);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.1);
@@ -152,9 +152,8 @@
 
 .game_card{
     background: rgba(255,255,255,0.06);
-    width: 300px;
-    margin: 30px auto;
-    padding: 20px;
+    width: 170px;
+   margin-left: 180px;
     border-radius: 14px;
     border: 1px solid rgba(255,255,255,0.08);
 }
@@ -356,5 +355,17 @@ margin-right: 30px;
   border: 2px solid black ;
 }
 
+.jatekhelye
+{
+    background: rgba(255,255,255,0.06);
+    width: 550px;
+    height: 430px;
+    border-radius: 15px;
+}
+/* ------------------------ */
+.slider-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
 
 

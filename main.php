@@ -37,6 +37,7 @@ $loginError = isset($_GET["login_error"]);
     <div class="game_btn" id="Reaction">
         <h2 class="hely">Reaction</h2>
     </div>
+   
 
     <div id="mode_toggle">
         <h2 class="hely">DARK</h2>
@@ -65,6 +66,35 @@ $loginError = isset($_GET["login_error"]);
         <h3>Color Game</h3>
     <button class="jatekBtn">Játék</button>
     </div>
+    <p></p>
+    <div class="jatekhelye">
+       <p id="status-text">Kattints a Játék gombra!</p>
+          
+            
+    <div id="controls" class="hidden">
+    <div class="slider-group">
+         <label for="hue">Árnyalat: <span id="hue-val">180</span>°</label>
+        <input type="range" id="hue" min="0" max="360" value="180">
+    </div>
+
+    <div class="slider-group">
+         <label for="sat">Telítettség: <span id="sat-val">50</span>%</label>
+        <input type="range" id="sat" min="0" max="100" value="50">
+    </div>
+
+    <div class="slider-group">
+        <label for="light">Világosság: <span id="light-val">50</span>%</label>
+        <input type="range" id="light" min="0" max="100" value="50">
+    </div>
+    <button id="guess-btn">Tipp leadása</button>
+    </div>
+
+
+
+
+
+
+    </div>    
 </div>
 
 <?php if (!$loggedIn): ?>
